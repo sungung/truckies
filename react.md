@@ -18,3 +18,4 @@ npm install -g firebase-tools
 - Context provides a way to pass data through the component tree without having to pass props down manually at every level.
 - I you only want to avoid passing some props through many levels, component composition is often a simpler solution than context.
 
+## TEST
