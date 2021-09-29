@@ -1,12 +1,5 @@
 import { useState, useEffect, useContext, createContext } from 'react';
-import { auth } from './firebase';
-import { onAuthStateChanged, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword,
-  signOut,
-  sendPasswordResetEmail,
-  updateEmail,
-  updatePassword} from 'firebase/auth';
+import fireabaseApp from './firebase';
 
 // Creating auth context  
 const AuthContext = createContext();
@@ -25,34 +18,34 @@ export const AuthProvider = ({ children }) => {
   });
 
   const signup = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+    return fireabaseApp.auth().createUserWithEmailAndPassword(email, password);
   };
   
   const login = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+    return fireabaseApp.auth().signInWithEmailAndPassword(email, password);
   };
 
   const logout = () => {
-    return signOut(auth);
+    return fireabaseApp.auth().signOut();
   }
 
   const changeEmail = (email) => {
-    return updateEmail(state.currentUser, email);
+    return fireabaseApp.auth().currentUser.updateEmail(email);
   }
 
   const resetPassword = (email) => {
-    return sendPasswordResetEmail(auth, email);
+    return fireabaseApp.auth().sendPasswordResetEmail(email);
   }
 
   const changePassword = (password) => {
-    return updatePassword(state.currentUser, password);
+    return fireabaseApp.auth().currentUser.updatePassword(password);
   }
 
   // Side effect runs once after initial rendering 
   // because dependency is empty array.
   useEffect(() => {
     // listen for auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = fireabaseApp.auth().onAuthStateChanged((user) => {
       setState({ loading: false, currentUser: user });
     });
     // unsubcribe to the listener when unmounting

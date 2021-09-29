@@ -1,35 +1,23 @@
 import { useState } from "react";
 import { useAuth } from "../common/AuthContext";
-import { Link, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import { FirebaseAuth } from "react-firebaseui";
+import firebaseApp from "../common/firebase";
+import firebaseUIConfig from "../common/firebaseUI";
 
 const Login = () => {
-  const [ error, setError ] = useState("");
-  const { login } = useAuth();
-  const history = useHistory();
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const { email, password } = e.target.elements;
-    try {
-      await login(email.value, password.value);
-      history.push("/")
-    } catch (e) {
-      console.error(e.message);
-      setError(e.code);
-    }
-  };
+  const { state } = useAuth();
 
   return (
     <>
-      <h1>Login</h1>
-      <form onSubmit={ handleSubmit }>
-        <input name="email" placeholder="email" type="email"/>
-        <input name="password" placeholder="password" type="password"/>
-        <button type="submit">Login</button>
-      </form>
-      {error && <div>{error}</div>}
-      <Link to="/forgot-password">Forgot Password?</Link>
-      <Link to="/signup">Sign Up</Link>
+      {!!state.currentUser ? (
+        <Redirect to={{ pathname: "/" }} />
+      ) : (
+        <div>
+          <p>Please Sign In</p>
+          <FirebaseAuth uiConfig={firebaseUIConfig} firebaseAuth={firebaseApp.auth()} />
+        </div>
+      )}
     </>
   )
 }
