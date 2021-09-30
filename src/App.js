@@ -6,28 +6,33 @@ import routes from "./common/routes";
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <Header />
-        <Switch>
-          {routes.map(route => (
-            route.private
-              ? <PrivateRoute
-                  key={route.path}
-                  path={route.path}
-                  exact={route.exact}
-                  component={route.main}
-                />
-              : <Route
-                  key={route.path}
-                  path={route.path}
-                  exact={route.exact}
-                  component={route.main}
-                />
-          ))}
-        </Switch>
-      </AuthProvider>
-    </Router>
+    <nav class="bg-gray-800">
+      <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+          <Router>
+            <AuthProvider>
+              <Header />
+              <Switch>
+                {routes.map(route => (
+                  route.private
+                    ? <PrivateRoute
+                        key={route.path}
+                        path={route.path}
+                        exact={route.exact}
+                        component={route.main}
+                      />
+                    : <Route
+                        key={route.path}
+                        path={route.path}
+                        exact={route.exact}
+                        component={route.main}
+                      />
+                ))}
+              </Switch>
+            </AuthProvider>
+          </Router>
+      </div>
+    </nav>
+
   );
 }
 
