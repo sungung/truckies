@@ -1,17 +1,17 @@
 import React, { useRef, useState } from "react"
-import { useAuth } from "../common/AuthContext";
+import { IAuthCtx, useAuth } from "../common/AuthContext";
 import { Link, useHistory } from "react-router-dom"
 
 const UpdateProfile = () => {
-  const emailRef = useRef()
-  const passwordRef = useRef()
-  const passwordConfirmRef = useRef()
-  const { state, changePassword, changeEmail } = useAuth()
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const passwordConfirmRef = useRef();
+  const { state, changePassword, changeEmail } = useAuth() as IAuthCtx;
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError("Passwords do not match")

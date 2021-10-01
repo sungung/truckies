@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useAuth } from "../common/AuthContext";
+import { IAuthCtx, useAuth } from "../common/AuthContext";
 import { Redirect } from "react-router-dom";
 import { FirebaseAuth } from "react-firebaseui";
 import firebaseApp from "../common/firebase";
 import firebaseUIConfig from "../common/firebaseUI";
 
 const Login = () => {
-  const { state } = useAuth();
+  const { state } = useAuth() as IAuthCtx;
 
   return (
     <>

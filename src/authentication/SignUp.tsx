@@ -1,21 +1,25 @@
 import { useState } from "react";
-import { useAuth } from "../common/AuthContext"
+import { IAuthCtx, useAuth } from "../common/AuthContext"
 import { useHistory } from "react-router-dom"
 
 const SignUp = () => {
   const [ error, setError ] = useState("");
-  const { signup } = useAuth();
+  const { signup } = useAuth() as IAuthCtx;
   const history = useHistory();
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
-    const { email, password } = e.target.elements;
+    const target = e.target as typeof e.target & {
+      email: { value: string };
+      password: { value: string };
+    }
     try {
-      await signup(email.value, password.value);
+      await signup(target.email.value, target.password.value);
       history.push("/");
-    } catch(e) {
-      console.error(e.message);
-      setError(e.code);
+    // Not know type of exception now, so take it as any for the moment
+    } catch(ex: any) {
+      console.error(ex.message);
+      setError(ex.code);
     }
   };
 

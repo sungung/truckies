@@ -6,8 +6,8 @@ import routes from "./common/routes";
 
 function App() {
   return (
-    <nav class="bg-gray-800">
-      <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+    <nav className="bg-gray-800">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
           <Router>
             <AuthProvider>
               <Header />
