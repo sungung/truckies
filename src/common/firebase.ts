@@ -1,6 +1,7 @@
 import firebase from "firebase";
+import "firebase/messaging";
 
-const fireabaseApp = firebase.initializeApp({
+let config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
@@ -8,6 +9,23 @@ const fireabaseApp = firebase.initializeApp({
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID      
-});
+};
+
+const fireabaseApp = firebase.initializeApp(config);
+
+/* Comment out if want to play with local emulator
+ *
+if (window.location.hostname === "localhost") {
+  fireabaseApp.functions().useEmulator("localhost", 5001);
+  fireabaseApp.auth().useEmulator("http://localhost:9099");
+  fireabaseApp.firestore().settings({
+    host: "localhost:8080",
+    ssl: false,
+  });
+  fireabaseApp.database().useEmulator("localhost", 9000);
+}
+*/
 
 export default fireabaseApp;
+
+

@@ -9,11 +9,7 @@ export interface IState {
 
 export interface IAuthCtx {
   state: IState,
-  login: (email: string, password: string) => Promise<firebase.auth.UserCredential>,
-  signup: (email: string, password: string) => Promise<firebase.auth.UserCredential>,
   logout: () => Promise<void>,
-  resetPassword: (email: string) => Promise<void>,
-  changeEmail: (email: string) => Promise<void> | undefined,
   changePassword: (password: string) => Promise<void> | undefined
 }
 
@@ -24,28 +20,12 @@ const AuthContext = createContext<IAuthCtx|null>(null);
 // easy to access user anywhere in react app.
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children } ) => {
+export const AuthProvider : React.FC<{}> = ({ children } ) => {
   // initialise state from a function
   const [ state, setState ] = useState<IState>({loading: true, currentUser: null});
 
-  const signup = (email: string, password: string) => {
-    return fireabaseApp.auth().createUserWithEmailAndPassword(email, password);
-  };
-  
-  const login = (email: string, password: string) => {
-    return fireabaseApp.auth().signInWithEmailAndPassword(email, password);
-  };
-
   const logout = () => {
     return fireabaseApp.auth().signOut();
-  }
-
-  const changeEmail = (email: string) => {
-    return fireabaseApp.auth().currentUser?.updateEmail(email);
-  }
-
-  const resetPassword = (email: string) => {
-    return fireabaseApp.auth().sendPasswordResetEmail(email);
   }
 
   const changePassword = (password: string) => {
@@ -65,11 +45,7 @@ export const AuthProvider = ({ children } ) => {
 
   const AuthCtx : IAuthCtx = {
     state,
-    login,
-    signup,
     logout,
-    resetPassword,
-    changeEmail,
     changePassword,
   }
 

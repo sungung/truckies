@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import firebaseApp from "../common/firebase"
 
 const firebaseUIConfig : firebaseui.auth.Config = {
   signInFlow: "popup",
@@ -7,7 +8,17 @@ const firebaseUIConfig : firebaseui.auth.Config = {
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
   ],
   callbacks: {
-    signInSuccessWithAuthResult: (authResult, redirectUr) => false,
+    signInSuccessWithAuthResult: (authResult, redirectUr) => {
+      firebaseApp.firestore().collection('drivers').doc(authResult.user.uid).set({
+        name: authResult.user.displayName, 
+        email: authResult.user.email
+      })
+      .catch((error) => {
+        console.error("Error writing driver details: ", error);
+      });
+      // Avoid redirects after sign-in.
+      return false;
+    },
   },
 };
 

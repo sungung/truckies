@@ -1,19 +1,22 @@
-import React, { useRef, useState } from "react"
+import React, { useState } from "react"
 import { IAuthCtx, useAuth } from "../common/AuthContext";
 import { Link, useHistory } from "react-router-dom"
 
 const UpdateProfile = () => {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const { state, changePassword, changeEmail } = useAuth() as IAuthCtx;
+  const { changePassword } = useAuth() as IAuthCtx;
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+    const target = e.target as typeof e.target & {
+      email: { value: string };
+      password: { value: string };
+      pwConfirm: { value: string };
+    }
+
+    if (target.password.value !== target.pwConfirm.value) {
       return setError("Passwords do not match")
     }    
 
@@ -21,11 +24,8 @@ const UpdateProfile = () => {
     setLoading(true)
     setError("")
 
-    if (emailRef.current.value !== state.currentUser.email) {
-      promises.push(changeEmail(emailRef.current.value))
-    }
-    if (passwordRef.current.value) {
-      promises.push(changePassword(passwordRef.current.value))
+    if (target.password.value) {
+      promises.push(changePassword(target.password.value))
     }
 
     Promise.all(promises)
@@ -46,9 +46,8 @@ const UpdateProfile = () => {
       <h1>Update Profile</h1>
       {error && <div>{error}</div>}
       <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="email" ref={emailRef} required defaultValue={state.currentUser.email} />
-        <input type="password" placeholder="Leave blank to keep the same" ref={passwordRef} />
-        <input type="password" placeholder="Leave blank to keep the same" ref={passwordConfirmRef} />
+        <input name="password" type="password" placeholder="Leave blank to keep the same"  />
+        <input name="pwConfirm" type="password" placeholder="Leave blank to keep the same"  />
         <button disabled={loading} type="submit">Update</button>
       </form>
       <div><Link to="/">Cancel</Link></div>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { IAuthCtx, useAuth } from "../common/AuthContext";
 import { Redirect } from "react-router-dom";
 import { FirebaseAuth } from "react-firebaseui";
