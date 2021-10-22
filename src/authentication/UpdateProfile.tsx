@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import { IAuthCtx, useAuth } from "../common/AuthContext";
+import useUser from "../common/UserContext";
 import { Link, useHistory } from "react-router-dom"
 
 const UpdateProfile = () => {
-  const { changePassword } = useAuth() as IAuthCtx;
+  const { changePassword } = useUser();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();

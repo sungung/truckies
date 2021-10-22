@@ -25,13 +25,15 @@ const messaging = firebase.messaging();
 // and you should use data messages for custom notifications.
 // For more info see: 
 // https://firebase.google.com/docs/cloud-messaging/concept-options
+
 messaging.onBackgroundMessage(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: '/firebase-logo.png'
+    icon: '/images/logo.png'
   };
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  // causing duplicated message
+  // self.registration.showNotification(notificationTitle, notificationOptions);
 });

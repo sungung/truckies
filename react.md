@@ -181,3 +181,44 @@ const reddit = () => {
   );
 };
 ```
+
+## Firestore
+
+### Create document 'groceryLists'
+export const createGroceryList = (userName) => {
+    return db.collection('groceryLists')
+        .add({
+            created: firebase.firestore.FieldValue.serverTimestamp(),
+            users: [{ name: userName}]
+        });
+};
+### Fetch data as a side effect, useEffect fires after component is rendered
+useEffect(() => {
+    if (groceryListId) {
+      FirestoreService.getGroceryList(groceryListId)
+        .then(groceryList => {
+          if (groceryList.exists) {
+            setError(null);
+            setGroceryList(groceryList.data());
+          } else {
+            setError('grocery-list-not-found');
+            setGroceryListId();
+          }
+        })
+        .catch(() => setError('grocery-list-get-fail'));
+    }s
+  }, [groceryListId, setGroceryListId]);
+### Streaming data then unsubscribe stream when component is unmounted
+useEffect(() => {
+    const unsubscribe = FirestoreService.streamGroceryListItems(groceryListId, {
+        // The observer object contains a next function that is called by 
+        // the Firebase web API every time the items sub-collection changes.
+        next: querySnapshot => {
+            const updatedGroceryItems = 
+                querySnapshot.docs.map(docSnapshot => docSnapshot.data());
+            setGroceryItems(updatedGroceryItems);
+        },
+        error: () => setError('grocery-list-item-get-fail')
+    });
+    return unsubscribe;
+}, [groceryListId, setGroceryItems]);

@@ -1,5 +1,5 @@
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import { IAuthCtx, useAuth } from "../common/AuthContext";
+import useUser from "../common/UserContext";
 
 interface PrivateRouteProps extends RouteProps {
   component: any;
@@ -7,7 +7,7 @@ interface PrivateRouteProps extends RouteProps {
 
 const PrivateRoute = (privateProps : PrivateRouteProps) => {
   const { component: Component, ...props } = privateProps;
-  const { state } = useAuth() as IAuthCtx
+  const { state } = useUser();
 
   return (
     <Route

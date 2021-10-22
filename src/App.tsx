@@ -1,28 +1,29 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { AuthProvider } from "./common/AuthContext";
+import { UserProvider } from "./common/UserContext";
 import PrivateRoute from "./authentication/PrivateRoute";
-import Header from "./common/Header";
+import {NavbarPage} from "./common/Navbar";
 import routes from "./common/routes";
-import fireabaseApp from "./common/firebase";
+import { fmessage } from "./common/fbase";
+import Notifications from "./common/Notifications";
+import "./App.css";
 
 function App() {
+  const [notification, setNotification] = useState({ title: "", body: "", eventid: "" });
 
-  useEffect(() => {
-    fireabaseApp.messaging().getToken({vapidKey: process.env.REACT_APP_FIREBASE_VAPIDKEY})
-    .then((currentToken) => {
-      console.log("Device token is " + currentToken);
-      navigator.serviceWorker.addEventListener("message", (message) => console.log(message));
-    })
-    .catch((error) => {
-      console.error("An error occurred while retrieving token. ", error);
-    });    
-  }, []);
+  fmessage.onMessage((payload) => {
+    setNotification({
+      title: payload?.notification?.title,
+      body: payload?.notification?.body,
+      eventid: payload?.data?.eventid,
+    });
+    console.log("New notification: " + JSON.stringify(payload));
+  });
 
   return (
     <Router>
-      <AuthProvider>
-        <Header />
+      <UserProvider>
+        <NavbarPage/>
         <Switch>
           {routes.map(route => (
             route.private
@@ -40,7 +41,8 @@ function App() {
                 />
           ))}
         </Switch>
-      </AuthProvider>
+        <Notifications title={notification.title} body={notification.body} eventid={notification.eventid} />
+      </UserProvider>
     </Router>
   );
 }

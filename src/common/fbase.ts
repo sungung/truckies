@@ -1,5 +1,4 @@
 import firebase from "firebase";
-import "firebase/messaging";
 
 let config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -11,7 +10,7 @@ let config = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID      
 };
 
-const fireabaseApp = firebase.initializeApp(config);
+const fbase = firebase.initializeApp(config);
 
 /* Comment out if want to play with local emulator
  *
@@ -26,6 +25,10 @@ if (window.location.hostname === "localhost") {
 }
 */
 
-export default fireabaseApp;
+export const fmessage = fbase.messaging();
+
+export const fstore = fbase.firestore();
+
+export default fbase;
 
 
