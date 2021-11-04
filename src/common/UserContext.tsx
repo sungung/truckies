@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext, createContext, FC } from "react";
 import fbase, { fmessage } from "./fbase";
-import firebase from "firebase";
-import { persistUser } from "./userManage";
+import { userDB } from "./fstoreManager";
 
 export interface IUserContext {
-  state: {
+  auth: {
     loading: boolean,
-    currentUser: firebase.User,
+    currentUser: firebase.default.User,
 
   },
   logout: () => Promise<void>,
@@ -23,7 +22,7 @@ export const useUser = () => useContext(UserContext);
 export const UserProvider: FC = ({ children }) => {
 
   // initialise state from a function
-  const [ state, setState ] = useState({ loading: true,  currentUser: {} as any });
+  const [ auth, setAuth ] = useState({ loading: true,  currentUser: {} as any });
 
   const logout = () => {
     return fbase.auth().signOut();
@@ -39,13 +38,13 @@ export const UserProvider: FC = ({ children }) => {
   useEffect(() => {
     // listen for auth state changes
     const unsubscribe = fbase.auth().onAuthStateChanged((user) => {
-      setState({ loading: false, currentUser: user });
+      setAuth({ loading: false, currentUser: user });
       if (!!user) {
         // User is signed in
         fmessage.getToken({vapidKey: process.env.REACT_APP_FIREBASE_VAPIDKEY})
         .then((token) => {
           if (token) {
-            persistUser(user, token);
+            userDB(user, token);
           } else {
             console.log('No registration token available. Request permission to generate one.');
           }
@@ -65,7 +64,7 @@ export const UserProvider: FC = ({ children }) => {
     }
   }, []);
 
-  if (state?.loading){
+  if (auth?.loading){
     return <div>Loading...</div>
   }
 
@@ -73,8 +72,8 @@ export const UserProvider: FC = ({ children }) => {
     // Provide auth context to pass current value object to the children tree.
     // When context value is changed, all of consumbers are being notified
     // and re-rendered.
-    <UserContext.Provider value={{ state, logout, changePassword }}>
-      {!state.loading && children}
+    <UserContext.Provider value={{ auth, logout, changePassword }}>
+      {!auth.loading && children}
     </UserContext.Provider>
   )
 };

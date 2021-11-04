@@ -1,6 +1,7 @@
-import firebase from "firebase";
+import firebase from 'firebase';
+import {auth as uiAuth} from 'firebaseui';
 
-let config = {
+const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
@@ -25,10 +26,38 @@ if (window.location.hostname === "localhost") {
 }
 */
 
+export const fbaseui : firebaseui.auth.Config = {
+  //signInFlow: "popup",
+  signInOptions: [
+    {
+      provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      clientId: "210103557637-bqsdsdnu1e69ml4eo68p8bhfse461r9d.apps.googleusercontent.com",
+    },
+    firebase.auth.EmailAuthProvider.PROVIDER_ID,   
+    {
+      provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+      recaptchaParameters: {
+        type: 'image', // 'audio'
+        size: 'normal', // 'invisible' or 'compact'
+        badge: 'bottomleft' //' bottomright' or 'inline' applies to invisible.
+      },
+      defaultCountry: 'AU', 
+      defaultNationalNumber: '1234567890',
+      loginHint: '+621234567890'
+    },
+  ],
+  credentialHelper: uiAuth.CredentialHelper.GOOGLE_YOLO,
+  callbacks: {
+    signInSuccessWithAuthResult: (authResult, redirectUr) => {
+      // Avoid redirects after sign-in.
+      return false;
+    },
+  },
+};
+
 export const fmessage = fbase.messaging();
 
 export const fstore = fbase.firestore();
 
 export default fbase;
-
 

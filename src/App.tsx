@@ -4,7 +4,7 @@ import { UserProvider } from "./common/UserContext";
 import PrivateRoute from "./authentication/PrivateRoute";
 import {NavbarPage} from "./common/Navbar";
 import routes from "./common/routes";
-import { fmessage } from "./common/fbase";
+import fbase, { fmessage } from "./common/fbase";
 import Notifications from "./common/Notifications";
 import "./App.css";
 
@@ -18,7 +18,7 @@ function App() {
       eventid: payload?.data?.eventid,
     });
     console.log("New notification: " + JSON.stringify(payload));
-  });
+  })
 
   return (
     <Router>

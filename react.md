@@ -1,3 +1,30 @@
+# JS
+## fake promise api
+const getList = () => {
+  return new Promise((resolve, reject) => {
+    if (Math.floor(Math.random() * 2)) {
+      setTimeout(() => resolve(['Joker', 'Batman']), 1000);
+    }else{
+      setTimeout(() => reject(new Error('Nobody here')), 1000);
+    }
+  })
+}
+
+* then/catch pattern
+getList().then((v) => console.log(v)).catch((e) => console.log(e));
+
+* async/await pattern
+const findPerson = async (who) => {
+  try {
+    const list= await getList(); 
+    console.log(list.some(p => p === who));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+findPerson('Joker')
+
 # React Notes
 
 ## references

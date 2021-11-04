@@ -7,13 +7,13 @@ interface PrivateRouteProps extends RouteProps {
 
 const PrivateRoute = (privateProps : PrivateRouteProps) => {
   const { component: Component, ...props } = privateProps;
-  const { state } = useUser();
+  const { auth } = useUser();
 
   return (
     <Route
       {...props}
       render={routeProps => {
-        return state.currentUser ? <Component {...routeProps} /> : <Redirect to="/login" />
+        return auth.currentUser ? <Component {...routeProps} /> : <Redirect to="/login" />
       }}
     ></Route>
   )

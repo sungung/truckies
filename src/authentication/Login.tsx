@@ -1,15 +1,14 @@
 import  useUser from "../common/UserContext";
 import { Redirect } from "react-router-dom";
 import { FirebaseAuth } from "react-firebaseui";
-import fbase from "../common/fbase";
-import fbaseui from "../common/fbaseui";
+import fbase, {fbaseui} from "../common/fbase";
 
 const Login = () => {
-  const { state } = useUser();
+  const { auth } = useUser();
 
   return (
     <>
-      {!!state.currentUser ? (
+      {!!auth.currentUser ? (
         <Redirect to={{ pathname: "/" }} />
       ) : (
         <div className="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">

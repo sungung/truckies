@@ -8,9 +8,9 @@ import useUser from "./UserContext";
 import routes from "./routes";
 
 export const NavbarPage = () => {
-  const { state } = useUser();
+  const { auth } = useUser();
   return (
-    state.currentUser ?
+    auth.currentUser ?
       <Navbar className="bg-gray-700 text-white">
         <NavbarBrand href="#">
           <svg className="w-9 h-9" preserveAspectRatio="xMidYMid" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 489.999 489.999">
@@ -43,10 +43,8 @@ export const NavbarPage = () => {
           </NavbarNav>  
           <NavbarNav orientation="end">
             {routes.map((route, i) => (
-              route.name === "Login" ?
-                <></>  
-              :
-                <NavbarItem key={route.name}><NavbarLink href={route.path}>{route.name}</NavbarLink></NavbarItem>
+              route.name !== "Login" ? 
+              <NavbarItem key={route.name}><NavbarLink href={route.path}>{route.name}</NavbarLink></NavbarItem> : <></>
             ))}
           </NavbarNav>
         </NavbarCollapse>

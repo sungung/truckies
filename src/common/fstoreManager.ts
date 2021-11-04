@@ -1,5 +1,4 @@
-import { fstore } from "./fbase";
-import firebase from "firebase";
+import {fstore} from "./fbase";
 
 const USER_COLLECTION = 'users';
 const DEVICE_COLLECTION = "devices";
@@ -19,7 +18,7 @@ type Device = {
  * @param path 
  * @returns 
  */
-export const persistUser = (user: firebase.User, token: string, path: string = USER_COLLECTION) => {
+export const userDB = (user: firebase.default.User, token: string, path: string = USER_COLLECTION) => {
   const userRef = fstore.collection(path).doc(user.uid);
   return fstore.runTransaction(async transaction => {
     const userDoc = await transaction.get(userRef);
@@ -54,3 +53,36 @@ const createDevice = (fcmToken: string): Device => {
     userAgent: window.navigator.userAgent,
   };
 };
+
+export const fleetDBControl = (user: firebase.default.User, license: string, notify: boolean, action?: 'delete' | 'update') => {
+  let touched = false;
+  return fstore.collection('user-fleet').where('uid', '==', user.uid).get()
+  .then((snapshot) => {
+    snapshot.forEach((doc) => {
+      let userFleet = doc.data();
+      if (userFleet.license === license) {
+        if (action === 'update') {
+          userFleet.notify = notify;
+          doc.ref.set(userFleet);
+        } else if (action === 'delete') {
+          doc.ref.delete();
+        }
+        touched = true;
+      }
+    });
+  })
+  .finally(() => {
+    if (!touched) {
+      let ref = fstore.collection('user-fleet').doc();
+      ref.set({uid: user.uid, license: license, notify: notify});
+    }
+    throw new Error('something woring')
+  });
+}
+
+export const fleetDBQuery = (user: firebase.default.User, license?: string) => {
+  return fstore.collection('user-fleet').where('uid', '==', user.uid).orderBy('license').get().then((snapshot) => {
+    //throw new Error('something not good');
+    return snapshot.docs.map(doc => doc.data());
+  });
+}
