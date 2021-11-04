@@ -5,12 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  // trict mode will run callbacks/methods twice
+  // strict mode will run callbacks/methods twice
   // e.g duplicated document in firestore
-  //<React.StrictMode>
-  //  <App />
-  //</React.StrictMode>,
-  <App/>,
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
